@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FloatingLabel from "./FloatingLabel";
-import { ToastContainer,  toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
 
@@ -10,6 +10,7 @@ import Terms from "./Terms";
 import Dropdown from "./Dropdown";
 
 export default function SignupModal({ setShowModal }) {
+  const [steps, setSteps] = useState("step1");
   const [checkTerms, onCheckTerms] = useState(false);
   const [directorateList, setDirectorateList] = useState();
   const [roleList, setRoleList] = useState();
@@ -66,49 +67,61 @@ export default function SignupModal({ setShowModal }) {
 
   async function onSignUpFormSubmit(e) {
     e.preventDefault();
-    const body = [{
-      full_name: signupForms.full_name,
-      user_name: signupForms.user_name,
-      password: signupForms.password,
-      directorate: selectedDireAndRole.directorate,
-      role: selectedDireAndRole.role,
-    }];
+    const body = [
+      {
+        full_name: signupForms.full_name,
+        user_name: signupForms.user_name,
+        password: signupForms.password,
+        directorate: selectedDireAndRole.directorate,
+        role: selectedDireAndRole.role,
+      },
+    ];
 
-  
-    
     let formData = new FormData();
     formData.append("image", selectedImage);
     formData.append("full_name", signupForms.full_name);
     formData.append("user_name", signupForms.user_name);
     formData.append("password", signupForms.password);
-    formData.append("directorate",selectedDireAndRole.directorate);
+    formData.append("directorate", selectedDireAndRole.directorate);
     formData.append("role", selectedDireAndRole.role);
 
     const result = await axios({
-        method:'post',
-        url : "http://localhost:9000/user/register",
-        data : formData,
-        header: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
+      method: "post",
+      url: "http://localhost:9000/user/register",
+      data: formData,
+      header: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
       },
     });
-    if(result.data === "UserName"){
-        toast.warning("A user with this username already exists. Use a different username.",{
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "colored",
-            
-        });
+    if (result.data === "UserName") {
+      toast.warning(
+        "A user with this username already exists. Use a different username.",
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        }
+      );
     }
+  }
+
+  function validateStepOne(e){
+    e.preventDefault();
+    setSteps("step2")
+  } 
+
+  function validateStepTwo(e){
+    e.preventDefault();
+    setSteps("step3");
   }
   return (
     <div className="fixed flex place-content-center  z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-          <ToastContainer />
+      <ToastContainer />
       <div className="relative w-full max-w-4xl max-h-full ">
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <button
@@ -126,73 +139,112 @@ export default function SignupModal({ setShowModal }) {
               />
             </svg>
           </button>
-          <div className="flex items-center gap-0">
+          <div className="flex items-center gap-0 ">
             <div className="px-6 py-6 lg:px-8">
-              <form className="space-y-6" onSubmit={onSignUpFormSubmit}>
-                <div className="flex flex-col gap-2">
-                  <FloatingLabel
-                    label={"full name"}
-                    name={"full_name"}
-                    type={"text"}
-                    placeholder={""}
-                    onChangeInput={onChangeInput}
-                    signupForms={signupForms.full_name}
-                  />
-                  <FloatingLabel
-                    label={"user name"}
-                    name={"user_name"}
-                    type={"text"}
-                    placeholder={""}
-                    onChangeInput={onChangeInput}
-                    signupForms={signupForms.user_name}
-                  />
+              <form className="space-y-6" onSubmit={steps==="step1"?validateStepOne:steps==="step2"?validateStepTwo:onSignUpFormSubmit}>
+                <div className="flex flex-col gap-5">
+                  <div className="mb-5">
+                    <div className=" items-center flex justify-between w-[20rem] max-w-[20rem]">
+                      <div className="flex gap-2 items-center">
+                      <div className={`border-2 rounded-full h-8 w-8 items-center justify-center text-center ${steps==="step1"?"text-gray-900 border-gray-900  dark:text-gray-50 dark:border-gray-50":"text-gray-400 border-gray-400 dark:text-gray-500 dark:border-gray-500"} cursor-pointer hover:text-gray-900 hover:border-gray-900 dark:hover:text-gray-50 dark:hover:border-gray-50`} onClick={()=>setSteps("step1")}>
+                          1
+                        </div>
+                        
+                      </div>
 
-                  <FloatingLabel
-                    label={"Password"}
-                    name={"password"}
-                    type={"password"}
-                    placeholder={""}
-                    onChangeInput={onChangeInput}
-                    signupForms={signupForms.password}
-                  />
+                      <div className="flex gap-2 items-center">
+                      <div className={`border-2 rounded-full h-8 w-8 items-center justify-center text-center ${steps==="step2"?"text-gray-900 border-gray-900  dark:text-gray-50 dark:border-gray-50":"text-gray-400 border-gray-400 dark:text-gray-500 dark:border-gray-500"} cursor-pointer hover:text-gray-900 hover:border-gray-900 dark:hover:text-gray-50 dark:hover:border-gray-50`} onClick={steps==="step1"?()=>validateStepOne:()=>setSteps("step2")}>
+                          2
+                        </div>
+                       
+                      </div>
 
-                  <label
-                    className="block mb-0 text-sm font-medium uppercase text-gray-900 dark:text-white"
-                    htmlFor="file_input"
-                  >
-                    Upload Photo
-                  </label>
+                      <div className="flex gap-2 items-center">
+                        <div className={`border-2 rounded-full h-8 w-8 items-center justify-center text-center ${steps==="step3"?"text-gray-900 border-gray-900  dark:text-gray-50 dark:border-gray-50":"text-gray-400 border-gray-400 dark:text-gray-500 dark:border-gray-500"} cursor-pointer hover:text-gray-900 hover:border-gray-900 dark:hover:text-gray-50 dark:hover:border-gray-50`}>
+                          3
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </div>
+                  {steps === "step1" && (
+                    <>
+                      <FloatingLabel
+                        label={"full name"}
+                        name={"full_name"}
+                        type={"text"}
+                        placeholder={""}
+                        onChangeInput={onChangeInput}
+                        signupForms={signupForms.full_name}
+                      />
+                      <FloatingLabel
+                        label={"user name"}
+                        name={"user_name"}
+                        type={"text"}
+                        placeholder={""}
+                        onChangeInput={onChangeInput}
+                        signupForms={signupForms.user_name}
+                      />
 
-                  <Image
-                    selectedImage={selectedImage}
-                    imageChange={imageChange}
-                    removeSelectedImage={removeSelectedImage}
-                  />
-                  <label className="text-black font-semibold uppercase dark:text-white">
-                    Directorate
-                  </label>
-                  <Dropdown
-                    allList={directorateList}
-                    label={"Choose Directorate"}
-                    name={"directorate"}
-                    onDropDownChange={onDropDownChange}
-                  />
-                  <label className="text-black font-semibold uppercase dark:text-white">
-                    Role
-                  </label>
-                  <Dropdown
-                    allList={roleList}
-                    label={"Choose Role"}
-                    name={"role"}
-                    onDropDownChange={onDropDownChange}
-                  />
+                      <FloatingLabel
+                        label={"Password"}
+                        name={"password"}
+                        type={"password"}
+                        placeholder={""}
+                        onChangeInput={onChangeInput}
+                        signupForms={signupForms.password}
+                      />
+                    </>
+                  )}
+
+                  { steps === "step3" &&
+                    <div className=" max-w-[20rem]">
+                      <label
+                        className="block mb-0 text-sm font-medium uppercase text-gray-900 dark:text-white"
+                        htmlFor="file_input"
+                      >
+                        Upload Photo
+                      </label>
+
+                      <Image
+                        selectedImage={selectedImage}
+                        imageChange={imageChange}
+                        removeSelectedImage={removeSelectedImage}
+                      />
+                    </div>
+                  }
+
+                  {steps === "step2" && (
+                    <>
+                      <label className="text-black font-semibold uppercase dark:text-white">
+                        Directorate
+                      </label>
+                      <Dropdown
+                        allList={directorateList}
+                        label={"Choose Directorate"}
+                        name={"directorate"}
+                        onDropDownChange={onDropDownChange}
+                        selectedDireAndRole={selectedDireAndRole.directorate}
+                      />
+                      <label className="text-black font-semibold uppercase dark:text-white">
+                        Role
+                      </label>
+                      <Dropdown
+                        allList={roleList}
+                        label={"Choose Role"}
+                        name={"role"}
+                        onDropDownChange={onDropDownChange}
+                        selectedDireAndRole={selectedDireAndRole.role}
+                      />
+                    </>
+                  )}
                 </div>
                 {checkTerms ? (
                   <button
                     type="submit"
                     className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
-                    Sign Up
+                    {steps==="step3" ? "Sign Up" : "Next"}
                   </button>
                 ) : (
                   <button
@@ -200,7 +252,7 @@ export default function SignupModal({ setShowModal }) {
                     className="w-full text-white bg-gray-400 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-400"
                     disabled
                   >
-                    Sign Up
+                    {steps==="step3" ? "Sign Up" : "Next"}
                   </button>
                 )}
               </form>
