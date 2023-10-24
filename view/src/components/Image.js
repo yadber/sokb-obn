@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 export default function Image({selectedImage,imageChange,removeSelectedImage}) {
    
   return (
     
     <div className='flex items-center justify-between dark:bg-gray-800 p-3'> 
-    <input accept='image/*' type='file' onChange={imageChange}  className='text-sm text-stone-500
+    <input filename={selectedImage} accept='image/*' type='file' onChange={imageChange} className='text-sm text-stone-500
    file:mr-5 file:py-1 file:px-1 file:border-[1px]
    file:text-xs file:font-medium
    file:bg-stone-50 file:text-stone-700

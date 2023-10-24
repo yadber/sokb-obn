@@ -2,13 +2,14 @@ const user = require("express").Router();
 const dbConn = require('../database');
 const multer = require('multer')
 const path = require('path')
+const fs = require('fs');
 
 
 const storage = multer.diskStorage({
     destination : (req, file, callBack) =>{
-        callBack(null, '../public/profile')
+        callBack(null, './public/profile')
     },
-    filename : (req,res, callBack) => {
+    filename : (req,file, callBack) => {
         callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
 })
@@ -38,11 +39,40 @@ user.post('/login', (req, res, next)=>{
 
 })
 
-// sign up section 
+// sign up section upload.single('image')
 
-user.post('/register',  (req,res) => {
-    console.log(req);
+user.post('/register',upload.single('image'), (req,res) => {
+    const image = req.file.filename;
+    const full_name = req.body.full_name;
+    const user_name = req.body.user_name;
+    const password = req.body.password;
+    const directorate = req.body.directorate;
+    const role = req.body.role;
+
+    // checking if the user_name already exist
+    const sql = "SELECT * FROM user WHERE user_name = ?";
+    dbConn.query(sql,[user_name],function(err,data){
+        if(err) return res.json("error!!");
+        if(data.length > 0){
+            return res.json("UserName");
+        }else{
+            return res.json("jira");
+        }
+    })
+    
+    console.log(directorate);
+    
 })
+
+// view image section
+// app.get('/images/:imageName', (req, res) => {
+//     // do a bunch of if statements to make sure the user is 
+//     // authorized to view this image, then
+  
+//     const imageName = req.params.imageName
+//     const readStream = fs.createReadStream(`images/${imageName}`)
+//     readStream.pipe(res)
+// })
 
 
 // directorate section
@@ -71,4 +101,8 @@ user.get('/role', (req,res,next) =>{
         }
     })
 })
+
+
+
+
 module.exports = user;
