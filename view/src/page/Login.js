@@ -3,6 +3,10 @@ import OBNLOGO from '../public/OBNLogo.jpg'
 
 import { ToastContainer,  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useNavigate} from "react-router-dom"
+
+import Home from './Home';
+
 
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
@@ -11,18 +15,15 @@ import SignupModal from '../components/SignupModal';
 
 
 
-export default function Login() {
-   
+export default function Login({setSignInNoRememberMe}) {
+    const navigate = useNavigate();
     const [loginFormInput, setLoginFormInput] = useState({
         user_name : "",
         password : "",
     })
     const [isChecked, setIsChecked] = useState(false);
     const InputElementRef = useRef(null);
-    const [userLoginInformation, setUserLoginInformation] = useState({
-        user_name : "",
-        id : ""
-    })
+  
     const [showModal, setShowModal] = useState(false);
     useEffect(() => {
        InputElementRef.current.focus();
@@ -47,6 +48,7 @@ export default function Login() {
     // when sign in button is clicked
     async function onSignInClicked(e){
         e.preventDefault();
+       
 
        await fetch(`http://localhost:9000/user/login`, {
             method:"POST",
@@ -87,13 +89,14 @@ export default function Login() {
                         'id' : result[0].id,
                         'user_name' : result[0].user_name
                     }))
-                }else{
-                    setUserLoginInformation({
-                        user_name: result[0].user_name,
-                        id : result[0].id
-                    })
                 }
-                alert(userLoginInformation.user_name);
+                // Home Page
+                setSignInNoRememberMe({
+                    status : true,
+                    id : result[0].id,
+                    user_name : result[0].user_name,
+                    full_name : result[0].full_name
+                });
             }
         })
     }

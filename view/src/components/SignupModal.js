@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import FloatingLabel from "./FloatingLabel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,13 +29,17 @@ export default function SignupModal({ setShowModal }) {
     dir : false,
     rol : false,
     sex : false
-  })
+  });
+
+  const InputElementRef = useRef(null);
 
   useEffect(() => {
     async function GetDirectorateList() {
       const response = await fetch("http://localhost:9000/user/directorate");
       const directoratePlainList = await response.json();
       setDirectorateList(directoratePlainList);
+
+      InputElementRef.current.focus();
     }
 
     async function GetRoleList() {
@@ -252,6 +256,7 @@ export default function SignupModal({ setShowModal }) {
                         placeholder={""}
                         onChangeInput={onChangeInput}
                         signupForms={signupForms.full_name}
+                        InputElementRef={InputElementRef}
                       />
                       <FloatingLabel
                         label={"user name"}
