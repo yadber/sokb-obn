@@ -10,7 +10,7 @@ export default function Image({selectedImage,imageChange,removeSelectedImage}) {
    file:text-xs file:font-medium
    file:bg-stone-50 file:text-stone-700
    hover:file:cursor-pointer hover:file:bg-blue-50
-   hover:file:text-blue-700'/>
+   hover:file:text-blue-700' required/>
 
       {
         selectedImage && (

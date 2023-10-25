@@ -23,7 +23,13 @@ export default function SignupModal({ setShowModal }) {
   const [selectedDireAndRole, setSelectedDireAndRole] = useState({
     directorate: "",
     role: "",
+    sex : ""
   });
+  const [redLightNotification, setRedLigntNotification] = useState({
+    dir : false,
+    rol : false,
+    sex : false
+  })
 
   useEffect(() => {
     async function GetDirectorateList() {
@@ -39,7 +45,17 @@ export default function SignupModal({ setShowModal }) {
     }
     GetDirectorateList();
     GetRoleList();
+
+    
+    
   }, []);
+  setTimeout(() => {
+    setRedLigntNotification({
+      dir : false,
+      rol : false,
+      sex : false
+    });
+  }, 10000);
 
   const onDropDownChange = (e) => {
     const element = e.target;
@@ -67,16 +83,8 @@ export default function SignupModal({ setShowModal }) {
 
   async function onSignUpFormSubmit(e) {
     e.preventDefault();
-    const body = [
-      {
-        full_name: signupForms.full_name,
-        user_name: signupForms.user_name,
-        password: signupForms.password,
-        directorate: selectedDireAndRole.directorate,
-        role: selectedDireAndRole.role,
-      },
-    ];
-
+   
+   if(selectedDireAndRole.sex !== "" && selectedDireAndRole.sex !== "choose your sex"){
     let formData = new FormData();
     formData.append("image", selectedImage);
     formData.append("full_name", signupForms.full_name);
@@ -84,6 +92,7 @@ export default function SignupModal({ setShowModal }) {
     formData.append("password", signupForms.password);
     formData.append("directorate", selectedDireAndRole.directorate);
     formData.append("role", selectedDireAndRole.role);
+    formData.append("sex", selectedDireAndRole.sex);
 
     const result = await axios({
       method: "post",
@@ -94,12 +103,12 @@ export default function SignupModal({ setShowModal }) {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (result.data === "UserName") {
-      toast.warning(
-        "A user with this username already exists. Use a different username.",
+    if (result.data === "saved") {
+      toast.success(
+        "user saved successfully!",
         {
           position: "top-center",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -107,17 +116,84 @@ export default function SignupModal({ setShowModal }) {
           theme: "colored",
         }
       );
+      setInterval(() => {
+        setShowModal(false)
+      }, 3000);
     }
+   }else{
+    setRedLigntNotification({sex:true})
+   }
+
+   
   }
 
-  function validateStepOne(e){
+  async function validateStepOne(e){
     e.preventDefault();
-    setSteps("step2")
+
+    const data = {
+      full_name: signupForms.full_name,
+      user_name : signupForms.user_name,
+      password : signupForms.password
+    }
+    const options = {
+      method : "POST",
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify(data)
+    }
+    fetch("http://localhost:9000/user/checkStepOne",options)
+      .then(response => response.json())
+      .then(data =>{ 
+        if(data === "UserName"){
+          toast.error(
+            "A user with this USER NAME already exists. Use a different USER NAME.",
+            {
+              position: "top-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "colored",
+            }
+          );
+        }
+        else if(data === "FullName"){
+          toast.error(
+            "A user with this FULL NAME already exists. Use a different FULL NAME.",
+            {
+              position: "top-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "colored",
+            }
+          );
+        }
+        else if(data === "AllGood"){
+          setSteps("step2")
+        }
+    })
+      .catch(error => console.error(error))
+    
+    
   } 
 
   function validateStepTwo(e){
     e.preventDefault();
-    setSteps("step3");
+   
+    if(selectedDireAndRole.directorate !== "choose your directorate" && selectedDireAndRole.role !== "choose your role" && selectedDireAndRole.directorate !== "" && selectedDireAndRole.role !== ""  ){
+      setSteps("step3");
+    }else{
+      if(selectedDireAndRole.directorate === "choose your directorate" || selectedDireAndRole.directorate === ""){
+        setRedLigntNotification({dir:true});
+      }else if(selectedDireAndRole.role === "choose your role" || selectedDireAndRole.role===""){
+        setRedLigntNotification({rol : true});
+      }
+    }
   }
   return (
     <div className="fixed flex place-content-center  z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -198,13 +274,34 @@ export default function SignupModal({ setShowModal }) {
                   )}
 
                   { steps === "step3" &&
-                    <div className=" max-w-[20rem]">
-                      <label
-                        className="block mb-0 text-sm font-medium uppercase text-gray-900 dark:text-white"
+                    <div className=" max-w-[20rem] flex-col gap-4">
+                      <div className="mb-4">
+                        
+                        <label
+                        className="block mb-2 text-sm font-medium uppercase text-gray-900 dark:text-white"
                         htmlFor="file_input"
                       >
-                        Upload Photo
+                        SEX
                       </label>
+                        <Dropdown  
+                        allList={false}
+                        redLightNotification = {redLightNotification.sex}
+                        label={"choose your sex"}
+                        name={"sex"}
+                        onDropDownChange={onDropDownChange}
+                        selectedDireAndRole={selectedDireAndRole.sex}
+                        />
+                      </div>
+
+                      <div> 
+                        <label
+                          className="block mb-2 text-sm font-medium uppercase text-gray-900 dark:text-white"
+                          htmlFor="file_input"
+                        >
+                          Upload Photo
+                        </label>
+                      </div>
+
 
                       <Image
                         selectedImage={selectedImage}
@@ -220,8 +317,9 @@ export default function SignupModal({ setShowModal }) {
                         Directorate
                       </label>
                       <Dropdown
+                        redLightNotification = {redLightNotification.dir}
                         allList={directorateList}
-                        label={"Choose Directorate"}
+                        label={"choose your directorate"}
                         name={"directorate"}
                         onDropDownChange={onDropDownChange}
                         selectedDireAndRole={selectedDireAndRole.directorate}
@@ -230,8 +328,9 @@ export default function SignupModal({ setShowModal }) {
                         Role
                       </label>
                       <Dropdown
+                      redLightNotification = {redLightNotification.rol}
                         allList={roleList}
-                        label={"Choose Role"}
+                        label={"choose your role"}
                         name={"role"}
                         onDropDownChange={onDropDownChange}
                         selectedDireAndRole={selectedDireAndRole.role}
