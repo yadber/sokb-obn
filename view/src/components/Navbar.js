@@ -6,15 +6,12 @@ import obnLogo from '../public/OBNLogo.jpg'
 import {BsFillSunFill} from 'react-icons/bs'
 import {MdDarkMode} from 'react-icons/md'
 
-export default function Navbar({ userLoginInformation }) {
-    const [activeButton, setActiveButton] = useState({
-        home : true,
-        rule : false,
-        profile : false,
-    });
+export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme, setNavbarMenuClicked,navbarMenuClicked}) {
+ 
+    
   return (
 
-    <nav className="bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+    <nav className={`${isDarkTheme?"bg-gray-700 border-gray-600":"bg-white border-gray-200"} `}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to={"/"} className="flex items-center cursor-pointer"> 
           <img
@@ -22,62 +19,47 @@ export default function Navbar({ userLoginInformation }) {
             class="h-8 mr-3 rounded-full"
             alt="OBN Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className={`self-center text-2xl font-semibold whitespace-nowrap ${isDarkTheme?"text-white":"text-black"} `}>
             SOKB-OBN
           </span>
         </Link>
 
         <div class=" w-full md:block md:w-auto">
-            <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-700 dark:border-gray-700">
+            <ul class={`font-medium flex flex-col p-4 md:p-0 mt-4 border  rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0   ${isDarkTheme?"border-gray-700 bg-gray-800 md:bg-gray-700 " : "md:bg-white bg-white border-gray-100"}`}>
                 <div className="flex justify-between gap-4">
                     <div className="flex gap-4 items-center">
-                            <li>
-                                <div className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer ${activeButton.home ? "text-blue-500" : ""}`}
-                                onClick={()=>setActiveButton({
-                                    home : true,
-                                    rule : false,
-                                    profile : false,
-                                })}
+                            <li onClick={()=>setNavbarMenuClicked("home")}>
+                                <div className={`block py-2 pl-3 pr-4  rounded   md:border-0  md:p-0     cursor-pointer  ${isDarkTheme ? "hover:bg-gray-50 hover:text-white md:hover:bg-transparent md:hover:text-blue-500  ":"md:hover:text-blue-700 d:hover:bg-transparent  hover:bg-transparent"}  ${navbarMenuClicked==="home" ? "text-blue-500" : isDarkTheme?"text-white" : "text-gray-900"}  `}
+                               
                                 >Home</div>
                             </li>
-                            <li>
-                            <div className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer ${activeButton.rule ? "text-blue-500" : ""} `}
-                            onClick={()=>setActiveButton({
-                                home : false,
-                                rule : true,
-                                profile : false,
-                            })}
+                            <li onClick={()=>setNavbarMenuClicked("rule")}>
+                            <div className={`block py-2 pl-3 pr-4  rounded   md:border-0  md:p-0     cursor-pointer  ${isDarkTheme ? "hover:bg-gray-50 hover:text-white md:hover:bg-transparent md:hover:text-blue-500  ":"md:hover:text-blue-700 md:hover:bg-transparent  hover:bg-transparent"} ${navbarMenuClicked === "rule" ? "text-blue-500" : isDarkTheme?"text-white" : "text-gray-900"}  `}
+                           
                             >Rule and Regulations</div>
                             </li>
 
-                            <li>
-                            <div  className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer ${activeButton.profile ? "text-blue-500" : ""}  ` }
-                            onClick={()=>setActiveButton({
-                                home : false,
-                                rule : false,
-                                profile : true,
-                            })}
+                            <li onClick={()=>setNavbarMenuClicked("profile")}>
+                            <div  className={`block py-2 pl-3 pr-4  rounded   md:border-0  md:p-0     cursor-pointer  ${isDarkTheme ? "hover:bg-gray-50 hover:text-white md:hover:bg-transparent md:hover:text-blue-500":"md:hover:text-blue-700 md:hover:bg-transparent  hover:bg-transparent"} ${navbarMenuClicked ==="profile"  ? "text-blue-500" : isDarkTheme?"text-white" : "text-gray-900"}   ` }
+                           
                             >{userLoginInformation.user_name}</div>
                             </li>
                     </div>
                     <div className="flex items-center gap-3">
-                            <li onClick={()=> setActiveButton({
-                                home: false,
-                                rule : false,
-                                profile : false
-                            })}>
+                            <li onClick={()=>setNavbarMenuClicked("logout")}>
                             <div className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent border-2  md:hover:text-blue-700 bg-blue-500 dark:bg-blue-600 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-900 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer">
                                 
                                 <p className="">Logout</p>
                             </div>
                        
                         </li>
-                        <div>
-                            <BsFillSunFill />
-                        </div>
-                        <div>
-                            <MdDarkMode />
-                        </div>
+                        {
+                          isDarkTheme ? 
+                            <BsFillSunFill onClick={()=>setIsDarkTheme(prevState => !prevState)} className=" cursor-pointer text-2xl"/>
+                        :
+                        
+                            <MdDarkMode onClick={()=>setIsDarkTheme(prevState => !prevState)} className=" cursor-pointer text-2xl" />    
+                        }
                     </div>
                 </div>
              
