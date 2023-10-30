@@ -11,6 +11,7 @@ import PageNotFound from "./page/PageNotFound";
 
 
 function App() {
+  const API_URL  = "http://localhost:9000";
   const [SignInNoRememberMe, setSignInNoRememberMe] = useState({
     status : false,
     id : "",
@@ -34,14 +35,13 @@ function App() {
       {LogedInUser.id > 0 || SignInNoRememberMe.status ? 
         <BrowserRouter >
           <Routes>
-          {console.log(SignInNoRememberMe.id)}
-            <Route path="/" element={<Home userLoginInformation={LogedInUser.id>0 ? LogedInUser : SignInNoRememberMe}/>} />
-            <Route path="/login" element={<Login/>} />
+            <Route path="/" element={<Home userLoginInformation={LogedInUser.id>0 ? LogedInUser : SignInNoRememberMe} API_URL = {API_URL}/>} />
+            <Route path="/login" element={<Login API_URL = {API_URL} />} />
           </Routes>
         </BrowserRouter>
       : <BrowserRouter >
       <Routes>
-        <Route path="/" element={<Login setSignInNoRememberMe={setSignInNoRememberMe}/>} />
+        <Route path="/" element={<Login setSignInNoRememberMe={setSignInNoRememberMe} API_URL = {API_URL}/>} />
         <Route path="*" element={<PageNotFound/>} />
       </Routes>
       

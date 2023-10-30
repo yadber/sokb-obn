@@ -3,8 +3,6 @@ import OBNLOGO from '../public/OBNLogo.jpg'
 
 import { ToastContainer,  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {useNavigate} from "react-router-dom"
-
 import Home from './Home';
 
 
@@ -15,8 +13,12 @@ import SignupModal from '../components/SignupModal';
 
 
 
-export default function Login({setSignInNoRememberMe}) {
-    const navigate = useNavigate();
+export default function Login({setSignInNoRememberMe, API_URL}) {
+    const getCurrentTheme = () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+ 
+  const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
+  console.log(isDarkTheme);
     const [loginFormInput, setLoginFormInput] = useState({
         user_name : "",
         password : "",
@@ -50,7 +52,7 @@ export default function Login({setSignInNoRememberMe}) {
         e.preventDefault();
        
 
-       await fetch(`http://localhost:9000/user/login`, {
+       await fetch(`${API_URL}/user/login`, {
             method:"POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -114,7 +116,7 @@ export default function Login({setSignInNoRememberMe}) {
    
     <section className='bg-gray-50 dark:bg-gray-900'>
         <ToastContainer />
-       {showModal ? <SignupModal setShowModal={setShowModal}/> : ""}
+       {showModal ? <SignupModal setShowModal={setShowModal} API_URL={API_URL}/> : ""}
        
        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
             <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -127,8 +129,8 @@ export default function Login({setSignInNoRememberMe}) {
                   Sign in to your account
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={(e)=>onSignInClicked(e)}>
-                  <TextInput label={"User Name"} id={"user_name"} placeholder={"user name"} required={true} type={"text"} loginFormInput={loginFormInput.user_name} onLoginFormChangeHandler={onLoginFormChangeHandler} InputElementRef={InputElementRef}/>
-                  <TextInput label={"Password"} id={"password"} placeholder={"********"} required={true} type={"password"} loginFormInput={loginFormInput.password} onLoginFormChangeHandler={onLoginFormChangeHandler}/>
+                  <TextInput isDarkTheme={isDarkTheme} label={"User Name"} id={"user_name"} placeholder={"user name"} required={true} type={"text"} loginFormInput={loginFormInput.user_name} onLoginFormChangeHandler={onLoginFormChangeHandler} InputElementRef={InputElementRef}/>
+                  <TextInput isDarkTheme={isDarkTheme} label={"Password"} id={"password"} placeholder={"********"} required={true} type={"password"} loginFormInput={loginFormInput.password} onLoginFormChangeHandler={onLoginFormChangeHandler}/>
                   <div className="flex items-center justify-between"> 
                         <Remember isChecked={isChecked} handleOnChange={handleOnChange}/>
                         <a href="#" className="text-sm font-medium text-gray-600 hover:underline dark:text-gray-500">Forgot password?</a>

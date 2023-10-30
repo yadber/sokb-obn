@@ -5,6 +5,8 @@ const path = require('path')
 const fs = require('fs');
 const bcrypt = require("bcrypt")
 
+
+
 const storage = multer.diskStorage({
     destination : (req, file, callBack) =>{
         callBack(null, './public/profile')
@@ -123,15 +125,7 @@ user.post('/checkStepOne', (req,res) => {
     
 })
 
-// view image section
-// app.get('/images/:imageName', (req, res) => {
-//     // do a bunch of if statements to make sure the user is 
-//     // authorized to view this image, then
-  
-//     const imageName = req.params.imageName
-//     const readStream = fs.createReadStream(`images/${imageName}`)
-//     readStream.pipe(res)
-// })
+
 
 
 // directorate section
@@ -146,6 +140,18 @@ user.get('/directorate', (req,res,next) =>{
     })
 })
 
+user.get('/detail/:id', (req,res,next) =>{
+    const id = req.params.id;
+    
+    const sql = "select * from user where id = ?";
+
+    dbConn.query(sql,[id], function(error, data){
+        if(error) throw error;
+        else{
+            return res.send(data);
+        }
+    })
+})
 
 
 

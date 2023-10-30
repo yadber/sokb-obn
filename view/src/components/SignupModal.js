@@ -9,7 +9,7 @@ import Image from "./Image";
 import Terms from "./Terms";
 import Dropdown from "./Dropdown";
 
-export default function SignupModal({ setShowModal }) {
+export default function SignupModal({ setShowModal,API_URL }) {
   const [steps, setSteps] = useState("step1");
   const [checkTerms, onCheckTerms] = useState(false);
   const [directorateList, setDirectorateList] = useState();
@@ -35,7 +35,7 @@ export default function SignupModal({ setShowModal }) {
 
   useEffect(() => {
     async function GetDirectorateList() {
-      const response = await fetch("http://localhost:9000/user/directorate");
+      const response = await fetch(`${API_URL}/user/directorate`);
       const directoratePlainList = await response.json();
       setDirectorateList(directoratePlainList);
 
@@ -43,7 +43,7 @@ export default function SignupModal({ setShowModal }) {
     }
 
     async function GetRoleList() {
-      const response = await fetch("http://localhost:9000/user/role");
+      const response = await fetch(`${API_URL}/user/role`);
       const RolePlainList = await response.json();
       setRoleList(RolePlainList);
     }
@@ -100,7 +100,7 @@ export default function SignupModal({ setShowModal }) {
 
     const result = await axios({
       method: "post",
-      url: "http://localhost:9000/user/register",
+      url: `${API_URL}/user/register`,
       data: formData,
       header: {
         Accept: "application/json",
@@ -146,7 +146,7 @@ export default function SignupModal({ setShowModal }) {
       },
       body : JSON.stringify(data)
     }
-    fetch("http://localhost:9000/user/checkStepOne",options)
+    fetch(`${API_URL}/user/checkStepOne`,options)
       .then(response => response.json())
       .then(data =>{ 
         if(data === "UserName"){

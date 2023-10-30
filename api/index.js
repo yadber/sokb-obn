@@ -7,6 +7,9 @@ const morgan = require('morgan');
 const user= require('./pages/user');
 const router = require('./pages/router');
 
+helmet({
+    crossOriginResourcePolicy: false,
+});
 
 const app = express();
 
@@ -14,7 +17,8 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
-
+app.use(express.static('public'));
+app.use('/profile', express.static('images'));
 
 
 app.use("/router", router);

@@ -1,22 +1,34 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import {Link} from 'react-router-dom'
 
-import obnLogo from '../public/OBNLogo.jpg'
 
+import obnLogo from '../public/OBNLogo.jpg'
 import {BsFillSunFill} from 'react-icons/bs'
 import {MdDarkMode} from 'react-icons/md'
 
-export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme, setNavbarMenuClicked,navbarMenuClicked}) {
- 
-    
-  return (
 
+export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme, setNavbarMenuClicked,navbarMenuClicked, API_URL}) {
+    const [imageSrc, setImageSrc] = useState("");
+    const [allUserReletedData, setAllUserReletedData] = useState({});
+
+    useEffect(() => {
+      async function GetUserDetail() {
+        const response = await fetch(`${API_URL}/user/detail/${userLoginInformation.id}`);
+        const RolePlainList = await response.json();
+        setAllUserReletedData(RolePlainList[0]);
+        setImageSrc(RolePlainList[0].profile_picture);
+      }
+      GetUserDetail()
+    }, [])    
+  
+  return (
+    
     <nav className={`${isDarkTheme?"bg-gray-700 border-gray-600":"bg-white border-gray-200"} `}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to={"/"} className="flex items-center cursor-pointer"> 
           <img
             src={obnLogo}
-            class="h-8 mr-3 rounded-full"
+            className="h-8 mr-3 rounded-full"
             alt="OBN Logo"
           />
           <span className={`self-center text-2xl font-semibold whitespace-nowrap ${isDarkTheme?"text-white":"text-black"} `}>
@@ -24,8 +36,8 @@ export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme
           </span>
         </Link>
 
-        <div class=" w-full md:block md:w-auto">
-            <ul class={`font-medium flex flex-col p-4 md:p-0 mt-4 border  rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0   ${isDarkTheme?"border-gray-700 bg-gray-800 md:bg-gray-700 " : "md:bg-white bg-white border-gray-100"}`}>
+        <div className=" w-full md:block md:w-auto">
+            <ul className={`font-medium flex flex-col p-4 md:p-0 mt-4 border  rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0   ${isDarkTheme?"border-gray-700 bg-gray-800 md:bg-gray-700 " : "md:bg-white bg-white border-gray-100"}`}>
                 <div className="flex justify-between gap-4">
                     <div className="flex gap-4 items-center">
                             <li onClick={()=>setNavbarMenuClicked("home")}>
@@ -40,9 +52,15 @@ export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme
                             </li>
 
                             <li onClick={()=>setNavbarMenuClicked("profile")}>
-                            <div  className={`block py-2 pl-3 pr-4  rounded   md:border-0  md:p-0     cursor-pointer  ${isDarkTheme ? "hover:bg-gray-50 hover:text-white md:hover:bg-transparent md:hover:text-blue-500":"md:hover:text-blue-700 md:hover:bg-transparent  hover:bg-transparent"} ${navbarMenuClicked ==="profile"  ? "text-blue-500" : isDarkTheme?"text-white" : "text-gray-900"}   ` }
+                            <div  className={`block py-2 pl-3 pr-4  rounded   md:border-0  md:p-0     cursor-pointer  ${isDarkTheme ? "hover:bg-gray-50 hover:text-white md:hover:bg-transparent md:hover:text-blue-500":"md:hover:text-blue-700 md:hover:bg-transparent  hover:bg-transparent"}   ` }
                            
-                            >{userLoginInformation.user_name}</div>
+                            >
+                              <img crossOrigin="anonymous" src={`${API_URL}/profile/${imageSrc}`} alt="admin" className={`h-10 w-10 rounded-full border-2 ${navbarMenuClicked ==="profile"  ? " border-blue-500" :"" } `}  />
+                              <div>
+                                
+                              </div>
+                            
+                          </div>
                             </li>
                     </div>
                     <div className="flex items-center gap-3">
