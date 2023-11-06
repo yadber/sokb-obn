@@ -95,6 +95,96 @@ user.post('/register',upload.single('image'), (req,res) => {
     
 })
 
+user.put('/register/:id', (req,res) =>{
+    const singleRow = req.params.id;
+    const updateForm = req.body;
+    const id = updateForm.id;
+    const email = updateForm.email;
+    const phone = updateForm.phone
+    const user_name = updateForm.user_name;
+    const old_password = updateForm.old_password;
+    const new_password = updateForm.new_password;
+    const sex = updateForm.sex;
+    const bio = updateForm.bio;
+    let sql;
+    let val;
+    
+    if(singleRow === "email"){
+       sql = 'UPDATE user SET email = ? WHERE id = ?'
+       val = email;
+    }else if(singleRow === "bio"){
+        sql = 'UPDATE user SET bio = ? WHERE id = ?';
+        val = bio;
+    }else if(singleRow === "sex"){
+        sql = 'UPDATE user SET sex = ? WHERE id = ?';
+        val = sex;
+    }else if(singleRow === "phone"){
+        sql = 'UPDATE user SET phone = ? WHERE id = ?';
+        val = phone;
+    }else if(singleRow === "user_name"){
+        const sql1 ='SELECT * FROM user WHERE user_name = ?';
+        dbConn.query(sql1,[user_name], function(error, data){
+            if(error) throw error;
+            if(data.length > 0){
+                res.json("Error")
+            }else{
+                sql = 'UPDATE user SET user_name = ? WHERE id=?';
+                val = user_name;
+                dbConn.query(sql,[val, id], function(err,result){
+                    if(err) throw err;
+                    else{
+                        res.json(singleRow);
+                    }
+                })
+            }
+         })
+    }else if(singleRow === "old_password" || singleRow === "new_password"){
+        const sql1 ='SELECT * FROM user WHERE user_name = ?';
+        dbConn.query(sql1,[user_name], function(error, data){
+            if(error) throw error;
+            if(data.length > 0){
+                const userHash = data[0].password;
+                bcrypt
+                    .compare(old_password, userHash)
+                    .then(result => {
+                            if(result){
+                                bcrypt
+                                .hash(new_password, 10)
+                                .then(hash => {
+                                const sql2 = 'UPDATE user SET password = ? WHERE id = ?';
+                                dbConn.query(sql2,[hash,id], function(error,data){
+                                    if (error) throw error
+                                    else return res.json("password");
+                                })
+                                  
+                                }).catch(err => console.error(err))
+                        
+
+
+                               
+                            }else{
+                                return res.json("OLD")
+                            }
+                        })
+                    .catch(err => console.error(err))
+            }else{
+                return res.json("some error");
+            }
+        })
+    }
+    if(val){
+        dbConn.query(sql,[val,id], function(err,result){
+            if(err) throw err;
+            else{
+                res.json(singleRow);
+            }
+        })
+    }
+
+
+})
+
+
 user.post('/checkStepOne', (req,res) => {
    
     const full_name = req.body.full_name;
@@ -140,6 +230,20 @@ user.get('/directorate', (req,res,next) =>{
     })
 })
 
+user.get('/directorate/:id', (req,res,next) =>{
+    const id = req.params.id;
+    const sql = "select * from list_directorate where id = ?";
+
+    dbConn.query(sql,[id], function(error, data){
+        if(error) throw error;
+        else{
+            return res.send(data);
+        }
+    })
+})
+
+
+
 user.get('/detail/:id', (req,res,next) =>{
     const id = req.params.id;
     
@@ -166,6 +270,19 @@ user.get('/role', (req,res,next) =>{
         }
     })
 })
+
+user.get('/role/:id', (req,res,next) =>{
+    const sql = "select * from list_role where id = ?"
+    const id = req.params.id;
+    console.log(id)
+    dbConn.query(sql,[id], function(error, data){
+        if(error) throw error;
+        else{
+            return res.send(data);
+        }
+    })
+})
+
 
 
 

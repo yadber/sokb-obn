@@ -11,7 +11,7 @@ export default function Home({ userLoginInformation, API_URL }) {
   const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
   const [navbarMenuClicked, setNavbarMenuClicked] = useState("home");
   const [allUserReletedData, setAllUserReletedData] = useState({});
-
+  const [onlyForEffect, setOnlyForEffect] = useState(1)
   useEffect(() => {
     async function GetUserDetail() {
       const response = await fetch(`${API_URL}/user/detail/${userLoginInformation.id}`);
@@ -19,13 +19,13 @@ export default function Home({ userLoginInformation, API_URL }) {
       setAllUserReletedData(RolePlainList[0]);
     }
     GetUserDetail()
-  }, [])
+  }, [onlyForEffect])
 
   return (
     <div
       className={`${
         isDarkTheme ? "bg-gray-900 " : "bg-gray-50"
-      }  mx-auto lg:py-0 h-[150vh] flex-1`}
+      }  mx-auto lg:py-0 h-[180vh] flex-1`}
     >
       <Navbar
         userLoginInformation={userLoginInformation}
@@ -34,6 +34,7 @@ export default function Home({ userLoginInformation, API_URL }) {
         isDarkTheme={isDarkTheme}
         setNavbarMenuClicked={setNavbarMenuClicked}
         API_URL = {API_URL}
+        setOnlyForEffect = {setOnlyForEffect}
         allUserReletedData = {allUserReletedData}
       />
       <div className={`${isDarkTheme ? "text-white" : "text-black "}`}>
@@ -46,9 +47,11 @@ export default function Home({ userLoginInformation, API_URL }) {
             />
           : navbarMenuClicked === "profile"
           ? <Profile isDarkTheme={isDarkTheme} API_URL={API_URL} 
-          allUserReletedData = {allUserReletedData}
+          allUserReletedData = {allUserReletedData} setOnlyForEffect={setOnlyForEffect}
           />
-          : ""}
+          : navbarMenuClicked === "notification"?
+            <div>notification</div>:""
+        }
       </div>
     </div>
   );
