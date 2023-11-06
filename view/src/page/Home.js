@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 
 import RuleRegulation from "../HeaderComponents/RuleRegulation";
 import Profile from "../HeaderComponents/Profile";
+import Notification from "../HeaderComponents/Notification";
 
 export default function Home({ userLoginInformation, API_URL }) {
   const getCurrentTheme = () =>
@@ -50,7 +51,7 @@ export default function Home({ userLoginInformation, API_URL }) {
           allUserReletedData = {allUserReletedData} setOnlyForEffect={setOnlyForEffect}
           />
           : navbarMenuClicked === "notification"?
-            <div>notification</div>:""
+            <Notification isDarkTheme={isDarkTheme} API_URL={API_URL} allUserReletedData = {allUserReletedData}/>:""
         }
       </div>
     </div>
