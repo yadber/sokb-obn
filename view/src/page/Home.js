@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import RuleRegulation from "../HeaderComponents/RuleRegulation";
 import Profile from "../HeaderComponents/Profile";
 import Notification from "../HeaderComponents/Notification";
+import Dashboard from "../HeaderComponents/Dashboard";
 
 export default function Home({ userLoginInformation, API_URL }) {
   const getCurrentTheme = () =>
@@ -12,7 +13,9 @@ export default function Home({ userLoginInformation, API_URL }) {
   const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
   const [navbarMenuClicked, setNavbarMenuClicked] = useState("home");
   const [allUserReletedData, setAllUserReletedData] = useState({});
-  const [onlyForEffect, setOnlyForEffect] = useState(1)
+  const [onlyForEffect, setOnlyForEffect] = useState(1);
+  // document.body.style.backgroundColor = "red"
+  document.body.style.backgroundColor = isDarkTheme?"black":"white"
   useEffect(() => {
     async function GetUserDetail() {
       const response = await fetch(`${API_URL}/user/detail/${userLoginInformation.id}`);
@@ -40,11 +43,19 @@ export default function Home({ userLoginInformation, API_URL }) {
       />
       <div className={`${isDarkTheme ? "text-white" : "text-black "}`}>
         {navbarMenuClicked === "home"
-          ? `${userLoginInformation.user_name} ${userLoginInformation.id}`
+          ? <Dashboard 
+          isDarkTheme={isDarkTheme}
+          API_URL = {API_URL}
+          allUserReletedData = {allUserReletedData}
+          setOnlyForEffect = {setOnlyForEffect}
+          />
           : navbarMenuClicked === "rule"
           ? <RuleRegulation 
               isDarkTheme={isDarkTheme} 
               userLoginInformation={userLoginInformation}
+              allUserReletedData = {allUserReletedData}
+              setOnlyForEffect = {setOnlyForEffect}
+              
             />
           : navbarMenuClicked === "profile"
           ? <Profile isDarkTheme={isDarkTheme} API_URL={API_URL} 

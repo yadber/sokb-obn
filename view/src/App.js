@@ -9,8 +9,12 @@ import Login from "./page/Login";
 import Home from "./page/Home";
 import PageNotFound from "./page/PageNotFound";
 
+import Proposal from "./menu/Proposal"
+
 
 function App() {
+  // document.body.style.backgroundColor = "red"
+
   const API_URL  = "http://localhost:9000";
   const [SignInNoRememberMe, setSignInNoRememberMe] = useState({
     status : false,
@@ -37,6 +41,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home userLoginInformation={LogedInUser.id>0 ? LogedInUser : SignInNoRememberMe} API_URL = {API_URL}/>} />
             <Route path="/login" element={<Login API_URL = {API_URL} />} />
+            <Route path="/proposal" element={<Proposal />} />
           </Routes>
         </BrowserRouter>
       : <BrowserRouter >
