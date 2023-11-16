@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {BsSendFill,BsCheck,BsCheck2All} from 'react-icons/bs'
 import {AiFillEye} from 'react-icons/ai'
 
-export default function ListHistoryComponent({isDarkTheme, imgSrc}) {
+export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production}) {
     const [fullImage, setImageFull] = useState(false);
     const [readMore, setReadMore] = useState(false);
   return (
@@ -15,36 +15,36 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc}) {
                     <div className='flex flex-col w-full gap-2 '>
                         <div className='flex justify-between items-center'>
                             <div className=''>
-                                Maintenance
+                                {title?title:"Title goes here..."}
                             </div>
-                            <div className={`border-2 p-1 rounded-md border-transparent/30`}>
-                                03/12/2022
+                            <div className={`border-2 p-1 text-sm rounded-md border-transparent/30`}>
+                                {saved_date?saved_date:"saved date"}
                             </div>
                         </div>
                         <div >
                             <p className={`${readMore?"":"line-clamp-2"}`}> 
-                            Suphaa ittisaa fi Sirreessaa buufataalee tamsaasa Kofalee, AM Roobee, Istuudiyoo FM Roobee,Gobbaa,Jimmaa fi Walisoos ni dabalata.
-                            oduu pirojectii Daandii. Haawwaasni naannoo sanaa daandiicharraa fayyadamu jedhamee yadamu hasofsiisuu qabdu.Qaama mootummaa ilaallatulle dubbisa.
-                            </p>
+                                {body ? body : "body goes here"}
+                           </p>
                            {readMore ? <p className='text-blue-300 hover:text-blue-500 underline italic cursor-pointer'  onClick={()=>setReadMore(prevState=>!prevState)}>read less</p>:<p className='text-blue-300 hover:text-blue-500 underline italic cursor-pointer' onClick={()=>setReadMore(prevState=>!prevState)}>read more</p>
                            }
                         </div>
                         <div className='flex justify-between text-sm font-light italic'>
                             <div className='flex gap-5'>
-                            <p>adaamaa</p>
-                            <p>2-program</p>
-                            <p>3-news</p>
-                            <p>7-days</p>
-                            <p>03.12.22 - 12.12.22</p>
+                            <p>{place?place:"destination"}</p>
+                            <p>{program>0?program>1?program+"-programs":program+"-program":'0-program'}</p>
+                            <p>{news>0?news+'-news':"0-news"}</p>
+                            <p>{days>0?days>1?days+'-days':days+'-day': "0-day"}</p>
+                            <p>{from?from:"from"} - {to?to:"to"}</p>
+                            <p>{production}-production</p>
                             </div>
-                            <div className='flex gap-1 items-center '>
+                            {/* <div className='flex gap-1 items-center '>
                                 <AiFillEye className='text-2xl hover:text-blue-400'/>
                                 <p className='font-bold '>22</p>
                                 
                                     <BsCheck className='text-2xl'/>
                                     <BsCheck2All className='text-2xl' />
                                 
-                            </div>
+                            </div> */}
                            
                         </div>
                     </div>
