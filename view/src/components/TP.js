@@ -3,12 +3,12 @@ import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 
-export default function TP({isDarkTheme, label}) {
+export default function TP({isDarkTheme, label,startDate,onChange,value}) {
     const nowTime = new Date()
     const hours = nowTime.getHours();
     const minute = nowTime.getMinutes();
-    const nowT = hours + ":" + minute
-    const [value, onChange] = useState(nowT)
+    const nowT = hours + ":" + minute;
+    // const [value, onChange] = useState(nowT)
   return (
     <div >
         <label className={`block mb-2 text-sm font-medium ${
@@ -18,7 +18,7 @@ export default function TP({isDarkTheme, label}) {
         {label?label:"Time"}
       </label>
       <TimePicker
-      minTime={nowT} 
+      minTime={nowTime.toLocaleDateString()===startDate.toLocaleDateString()?nowT:""} 
       onChange={onChange} 
       value={value}  
       className={` border  sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      ${

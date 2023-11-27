@@ -6,6 +6,7 @@ const morgan = require('morgan');
 
 const user= require('./pages/user');
 const router = require('./pages/router');
+const studioProduction = require('./pages/studioProduction');
 
 helmet({
     crossOriginResourcePolicy: false,
@@ -19,10 +20,13 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(express.static('public'));
 app.use('/profile', express.static('images'));
+// app.use('/studioProduction', express.static('images'));
+
 
 
 app.use("/router", router);
 app.use('/user', user);
+app.use('/studioProduction', studioProduction);
 
 
 

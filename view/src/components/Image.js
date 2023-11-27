@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Image({selectedImage,imageChange,removeSelectedImage}) {
+export default function Image({selectedImage,imageChange,removeSelectedImage, fullImage}) {
    
   return (
     
@@ -17,7 +17,7 @@ export default function Image({selectedImage,imageChange,removeSelectedImage}) {
             <div className="flex flex-col gap-1">
                 <img
                     src={URL.createObjectURL(selectedImage)}
-                    className=' rounded-full h-24 w-24'
+                    className={` ${fullImage?"":"rounded-full h-24 w-24"}`}
                     alt='thumb'
                 />
                 <button onClick={removeSelectedImage} 

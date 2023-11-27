@@ -58,7 +58,7 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
     <div>
 
    
-    { showModal? <HistoryAddModal isDarkTheme={isDarkTheme} setShowModal={setShowModal} API_URL={API_URL}/> :
+    { showModal? <HistoryAddModal isDarkTheme={isDarkTheme} setShowModal={setShowModal} API_URL={API_URL} allUserReletedData={allUserReletedData}/> :
       <>
       <div className="flex gap-10">
         <BiSolidMessageAdd className='text-2xl cursor-pointer' onClick={()=>setShowModal(true)}/>
