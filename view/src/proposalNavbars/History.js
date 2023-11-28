@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import ListHistoryComponent from '../card/ListHistoryComponent'
 
 import HistoryAddModal from '../card/HistoryAddModal'
@@ -12,6 +12,16 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
   const imgSrc = 'http://localhost:9000/thumbnail/document.jpg';
   const [listView, setListView] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [allSavedStudioProposal, setAllSavedStudioProposal] = useState([{}]);
+
+  useEffect(() => {
+  }, [])
+  getStudioProposal()
+  async function getStudioProposal(){
+    const response = await fetch(`${API_URL}/studioProduction/list/${allUserReletedData.id}`);
+    const savedStudioPlainList = await response.json();
+    setAllSavedStudioProposal(savedStudioPlainList)
+  }
   const HistoryObj = [
     {
       id : 1,
@@ -30,7 +40,7 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
       to : "12.12.2023",
       sent_to : "",
       days : 7,
-      production : "field"
+     
 
     },
     {
@@ -50,9 +60,10 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
       to : "12.12.2023",
       sent_to : "",
       days : 7,
-      production : "studio"
+      
 
-    }
+    },
+    
   ]
   return (
     <div>
@@ -71,11 +82,11 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
       </div>
       <div className='flex w-full justify-center mt-2'> 
       {   listView?
-      
-      <div className='flex flex-col gap-2'>
+      <div className='flex gap-2'>
+      <div className='flex flex-col  gap-2'>
           {
             HistoryObj.map(val => {
-              return <ListHistoryComponent 
+              return  <ListHistoryComponent 
               imgSrc={val.imgSrc} 
               saved_date={val.saved_date}
               title = {val.title}
@@ -87,9 +98,32 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
               from = {val.from}
               to = {val.to}
               production = {val.production}
+              isDarkTheme={isDarkTheme}/> 
+            })
+            
+          }
+          </div>
+          <div  className='flex flex-col  gap-2'>
+          {
+            allSavedStudioProposal.map(val => {
+              return <ListHistoryComponent 
+              imgSrc={`${API_URL}/studioProduction/${val.file}`} 
+              saved_date={val.saved_date}
+              title = {val.program_name}
+              body = {val.description}
+              place = {val.studio_idfk}
+              program={val.guest_number}
+              news = {val.host_number}
+              days = {val.scheduled_date}
+              from = {val.scheduled_s_time}
+              to = {val.scheduled_e_time}
+              production = {val.production_type}
+              studio = "yes"
               isDarkTheme={isDarkTheme}/>
             })
+            
           }
+        </div>
         </div>
           :
         <div className='w-full max-w-6xl '>

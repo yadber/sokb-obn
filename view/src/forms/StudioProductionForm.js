@@ -11,12 +11,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 
 
-export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL  }) {
+export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL, setShowModal  }) {
   const nowTime = new Date()
   const hours = nowTime.getHours();
   const minute = nowTime.getMinutes();
   const nowT = hours + ":" + minute;
-
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(nowT)
   const [endTime, setEndTime] = useState(nowT)
@@ -67,34 +66,19 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
         },
       });
       if (result.data === "saved") {
+        toast.success("saved successfully!",{
+          position:"top-center",
+          autoClose:2000,
+          theme : "colored"
+        })
+        setShowModal(false)
       }else{
-
+        toast.error("something went wrong!",{
+          position:"top-center",
+          autoClose:2000,
+          theme : "colored"
+        })
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }else{
       toast.error("all forms must be filled!",{
         position:"top-center",
@@ -145,7 +129,7 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
           </legend>
           <TextInput
 
-            label="Name"
+            label="Program name"
             id={"program_name"}
             loginFormInput={proposalForm.program_name}
             onLoginFormChangeHandler={onFormChange}

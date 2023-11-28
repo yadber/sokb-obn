@@ -20,28 +20,48 @@ const upload = multer({
 
 
 studioProduction.post('/save',upload.single('file'), (req,res) => {
-    const some = req.body;
-    console.log(some)
-    // const full_name = req.body.full_name;
-    // const user_name = req.body.user_name;
-    // const password = req.body.password;
-    // const directorate = req.body.directorate;
-    // const role = req.body.role;
-    // const sex = req.body.sex;
-    // const active = 0;
+    const file = req.file ? req.file.filename : "No file attached!";
+    const program_name = req.body.program_name;
+    const host_name = req.body.host_name;
+    const host_number = req.body.host_number;
+    const guest_number = req.body.guest_number;
+    const studio_idfk = req.body.studio_idfk;
+    const scheduled_date = req.body.scheduled_date;
     
-    // const sql = "INSERT INTO user (full_name, user_name, sex, role_id_fk, directorate_id_fk, active, profile_picture, password) VALUES( ? )"
-    // const values = [full_name, user_name, sex, role,directorate, active, image, hash];
+    const scheduled_s_time = req.body.scheduled_s_time;
+    const scheduled_e_time = req.body.scheduled_e_time;
+    const description = req.body.description;
+    const user_idfk = req.body.user_idfk;
+    
+    const date = new Date()
+    const time = date.toLocaleTimeString();
+    const day = date.toLocaleDateString();
+    const savedDate = `${day}  ${time}`;
+    const production_type = "Studio";
+    
+    const sql = "INSERT INTO saved_studio_production_form (program_name, host_name, host_number, guest_number, studio_idfk, scheduled_date, scheduled_s_time, scheduled_e_time, description, file, user_idfk, saved_date, production_type, update_date ) VALUES( ? )"
+    const values = [program_name, host_name, host_number, guest_number,studio_idfk, scheduled_date, scheduled_s_time, scheduled_e_time, description, file,user_idfk, savedDate, production_type,date ];
 
-    // dbConn.query(sql, [values], function(err, result){
-    //     if(err) throw err;
-    //     else {
-    //         res.json("saved")
-    //     }
-    // })
+    dbConn.query(sql, [values], function(err, result){
+        if(err) throw err;
+        else {
+            res.json("saved")
+        }
+    })
    
     
 })
 
 
+
+studioProduction.get('/list/:id', (req,res,next) =>{
+    const id = req.params.id;
+    const sql = "select * from saved_studio_production_form where user_idfk = ? ORDER BY update_date DESC";
+    dbConn.query(sql,[id], function(error, data){
+        if(error) throw error;
+        else{
+            return res.send(data);
+        }
+    })
+})
 module.exports = studioProduction;

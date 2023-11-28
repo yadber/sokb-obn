@@ -29,7 +29,11 @@ export default function HistoryAddModal({setShowModal, isDarkTheme, API_URL, all
               formType === "field" ? 
               <div> field form </div> 
               :
-              <StudioProductionForm isDarkTheme={isDarkTheme} API_URL={API_URL} allUserReletedData={allUserReletedData}/> 
+              <StudioProductionForm 
+              setShowModal ={setShowModal}
+              isDarkTheme={isDarkTheme} 
+              API_URL={API_URL} 
+              allUserReletedData={allUserReletedData}/> 
 
              }
            </div>
