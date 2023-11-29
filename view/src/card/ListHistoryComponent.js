@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import {BsSendFill,BsCheck,BsCheck2All} from 'react-icons/bs'
 import {AiFillEye} from 'react-icons/ai'
 
-export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production}) {
+export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production,requested_by}) {
     const [fullImage, setImageFull] = useState(false);
     const [readMore, setReadMore] = useState(false);
   return (
-    <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-950 border-gray-800":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}>
+    <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}>
        <div className='flex gap-3 items-center'>
         <div className='flex gap-3 items-center'>
                     <div>
@@ -24,8 +24,8 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
                         <div >
                             {
                                 production?
-                                <p className={`${readMore?"":"line-clamp-2"}`}>
-                                    { `${title} studio production on ${place} studio with ${news}-host and ${program}-guest on ${days} from ${from} to ${to} ${body?body:"no Description"}`}
+                                <p className={` ${readMore?"":"line-clamp-2"}`}>
+                                    {` ${requested_by} is requesting a program called ${title} studio production on ${place} studio with ${news}-host and ${program}-guest on ${days} from ${from} to ${to} ${body?body:"no Description"}`}
                                 </p>
                                 :
                                 <p className={`${readMore?"":"line-clamp-2"}`}> 

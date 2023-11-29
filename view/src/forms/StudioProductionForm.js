@@ -11,8 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 
 
-export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL, setShowModal  }) {
-  const nowTime = new Date()
+export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL, setShowModal, setPleaseUpdate  }) {
+  const nowTime = new Date();
+  const [programAvailable, setProgramAvailabale] = useState(false);
   const hours = nowTime.getHours();
   const minute = nowTime.getMinutes();
   const nowT = hours + ":" + minute;
@@ -40,6 +41,7 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
   };
 
   async function onSaveClick(){
+
     if(proposalForm.program_name && proposalForm.host_name && proposalForm.host_number && proposalForm.guest_number && proposalForm.choose_studio !== "Choose Studio"){
       let formData = new FormData();
 
@@ -71,6 +73,8 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
           autoClose:2000,
           theme : "colored"
         })
+
+        setPleaseUpdate(prevState => prevState + 1);
         setShowModal(false)
       }else{
         toast.error("something went wrong!",{
@@ -87,6 +91,44 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
       })
     }
    
+  }
+  async function checkAvailability(){
+    setPleaseUpdate(prevState => prevState + 1);
+    if(proposalForm.choose_studio === "Choose Studio"){
+      toast.warning("please choose the studio", {
+        position:"top-center",
+        autoClose:2000,
+        theme:"colored"
+      })
+    }else{
+      const data = {"choose_studio":proposalForm.choose_studio,
+      "start_date" : startDate.toLocaleDateString(), "start_time":startTime, "endTime":endTime};
+      await fetch(`${API_URL}/studioProduction/check`,{
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body : JSON.stringify(data)
+      }).then(response => response.json())
+      .then(data => {
+        if(data[0] && data[0].scheduled_e_time !== startTime){
+            setProgramAvailabale(false);
+            toast.info(`This time is occupied by ${data.map(val => val.program_name+" on Exactly "+ val.scheduled_date +" from " + val.scheduled_s_time + " to " + val.scheduled_e_time)}`, {
+              position:"top-center",
+              autoClose:5000,
+              theme:"colored"
+            })
+        }else{
+            setProgramAvailabale(true);
+            toast.success("The time is not occupied!", {
+              position: "top-center",
+              autoClose:2000,
+              theme:"colored"
+            })
+        }}
+      
+      
+      )
+    }
+    
   }
 
   function onFormChange(e){
@@ -220,8 +262,8 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
             label={"Ending time"} 
             startDate={startDate}/>
           </div>
-          <div className="flex justify-end italic underline text-blue-400 cursor-pointer hover:text-blue-600 mt-[-1rem]">
-              check availability
+          <div  className="flex justify-end italic underline text-blue-400  mt-[-1rem]">
+              <p className="cursor-pointer  hover:text-blue-600" onClick={()=>checkAvailability()} >check availability</p>
           </div>
         </fieldset>
         </div>

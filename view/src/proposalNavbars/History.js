@@ -8,20 +8,29 @@ import {BsTable,BsListTask} from 'react-icons/bs'
 
 import HistoryGrid from '../card/HistoryGrid'
 
-export default function History({isDarkTheme, API_URL, allUserReletedData}) {
-  const imgSrc = 'http://localhost:9000/thumbnail/document.jpg';
+export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
   const [listView, setListView] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [allSavedStudioProposal, setAllSavedStudioProposal] = useState([{}]);
+  const [couseEffect, setCouseEffect] = useState(1);
+  const [pleaseUpdate, setPleaseUpdate] = useState(1);
+  const [fieldOrStudio, setFieldOrStudio] = useState("studio");
 
   useEffect(() => {
-  }, [])
-  getStudioProposal()
-  async function getStudioProposal(){
-    const response = await fetch(`${API_URL}/studioProduction/list/${allUserReletedData.id}`);
-    const savedStudioPlainList = await response.json();
-    setAllSavedStudioProposal(savedStudioPlainList)
-  }
+    couseEffect < 5 && setTimeout(() => {   
+     setCouseEffect(prevState => prevState +1);
+    }, 5000)
+    
+    async function getStudioProposal(){
+      const response = await fetch(API_URL+'/studioProduction/list/'+allUserReletedData.id);
+      const savedStudioPlainList = await response.json();
+      setAllSavedStudioProposal(savedStudioPlainList)
+    }
+    getStudioProposal()
+    
+  },[pleaseUpdate, couseEffect])
+   console.log("please update value" + pleaseUpdate);
+
   const HistoryObj = [
     {
       id : 1,
@@ -60,8 +69,6 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
       to : "12.12.2023",
       sent_to : "",
       days : 7,
-      
-
     },
     
   ]
@@ -69,9 +76,10 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
     <div>
 
    
-    { showModal? <HistoryAddModal isDarkTheme={isDarkTheme} setShowModal={setShowModal} API_URL={API_URL} allUserReletedData={allUserReletedData}/> :
+    { showModal? <HistoryAddModal setPleaseUpdate={setPleaseUpdate} isDarkTheme={isDarkTheme} setShowModal={setShowModal} API_URL={API_URL} allUserReletedData={allUserReletedData}/> :
       <>
-      <div className="flex gap-10">
+      <div className="flex gap-10 w-full">
+        
         <BiSolidMessageAdd className='text-2xl cursor-pointer' onClick={()=>setShowModal(true)}/>
 
       {  listView? 
@@ -79,11 +87,30 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
         :
         <BsListTask onClick={()=>setListView(prevState=>!prevState)} className='text-2xl cursor-pointer'/>
       }
+      <div className='text-center items-center flex gap-10 w-full justify-center '>
+          <div className={`cursor-pointer italic  ${fieldOrStudio === "studio"?"text-blue-500":""}` }
+            onClick={()=>setFieldOrStudio("studio")}
+            >
+              studio
+            </div>
+            <div className={`cursor-pointer italic  ${fieldOrStudio === "field"?"text-blue-500":""}` }
+            onClick={()=>setFieldOrStudio("field")}
+            >
+              field
+            </div>
+            <div className={`cursor-pointer italic  ${fieldOrStudio === "both"?"text-blue-500":""}` }
+            onClick={()=>setFieldOrStudio("both")}
+            >
+              Both
+            </div>
+      </div>
+       
       </div>
       <div className='flex w-full justify-center mt-2'> 
       {   listView?
       <div className='flex gap-2'>
-      <div className='flex flex-col  gap-2'>
+
+        {(fieldOrStudio==="field" || fieldOrStudio ==="both") &&<div className='flex flex-col  gap-2'>
           {
             HistoryObj.map(val => {
               return  <ListHistoryComponent 
@@ -97,13 +124,15 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
               days = {val.days}
               from = {val.from}
               to = {val.to}
+
               production = {val.production}
               isDarkTheme={isDarkTheme}/> 
             })
             
           }
-          </div>
-          <div  className='flex flex-col  gap-2'>
+          </div>}
+
+         { (fieldOrStudio === "studio" || fieldOrStudio === "both") && <div  className='flex flex-col  gap-2'>
           {
             allSavedStudioProposal.map(val => {
               return <ListHistoryComponent 
@@ -117,13 +146,14 @@ export default function History({isDarkTheme, API_URL, allUserReletedData}) {
               days = {val.scheduled_date}
               from = {val.scheduled_s_time}
               to = {val.scheduled_e_time}
+              requested_by = {val.host_name}
               production = {val.production_type}
               studio = "yes"
               isDarkTheme={isDarkTheme}/>
             })
             
           }
-        </div>
+          </div>}
         </div>
           :
         <div className='w-full max-w-6xl '>

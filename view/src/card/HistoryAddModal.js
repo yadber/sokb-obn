@@ -3,7 +3,7 @@ import {GiCancel} from 'react-icons/gi'
 
 import StudioProductionForm from '../forms/StudioProductionForm'
 
-export default function HistoryAddModal({setShowModal, isDarkTheme, API_URL, allUserReletedData}) {
+export default function HistoryAddModal({setShowModal, isDarkTheme, API_URL, allUserReletedData, setPleaseUpdate}) {
   const [formType, setFormType] = useState("field")
   return (
     <div className="fixed flex place-content-center  z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)]  max-h-full">
@@ -30,6 +30,7 @@ export default function HistoryAddModal({setShowModal, isDarkTheme, API_URL, all
               <div> field form </div> 
               :
               <StudioProductionForm 
+              setPleaseUpdate={setPleaseUpdate}
               setShowModal ={setShowModal}
               isDarkTheme={isDarkTheme} 
               API_URL={API_URL} 

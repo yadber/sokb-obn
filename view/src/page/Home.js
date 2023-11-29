@@ -28,8 +28,8 @@ export default function Home({ userLoginInformation, API_URL }) {
   return (
     <div
       className={`${
-        isDarkTheme ? "bg-gray-900 " : "bg-gray-50"
-      }  mx-auto lg:py-0 h-[180vh] flex-1`}
+        isDarkTheme ? "bg-black " : "bg-white"
+      }  mx-auto lg:py-0 flex-1`}
     >
       <Navbar
         userLoginInformation={userLoginInformation}

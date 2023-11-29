@@ -24,7 +24,7 @@ export default function Navbar({ userLoginInformation,setIsDarkTheme,isDarkTheme
   
   return (
     
-    <nav className={`${isDarkTheme?"bg-gray-700 border-gray-600":"bg-white border-gray-200"} `}>
+    <nav className={`${isDarkTheme?"bg-gray-700 border-gray-600":"bg-white border-b-2 border-gray-200"} `}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to={"/"} className="flex items-center cursor-pointer"> 
           <img

@@ -64,4 +64,24 @@ studioProduction.get('/list/:id', (req,res,next) =>{
         }
     })
 })
+
+
+studioProduction.post('/check', (req,res,next) =>{
+    const val = req.body;
+    const choose_studio = val.choose_studio;
+    const start_date = val.start_date;
+    const start_time = val.start_time;
+    const end_time = val.end_time;
+
+    const sql = "SELECT * FROM saved_studio_production_form where studio_idfk =? and scheduled_date =? and ? BETWEEN scheduled_s_time and scheduled_e_time";
+    dbConn.query(sql, [choose_studio,start_date,start_time], function(error,data){
+        if(error) throw error;
+        else{
+            return res.send(data);
+        }
+    })
+
+})
+
+
 module.exports = studioProduction;
