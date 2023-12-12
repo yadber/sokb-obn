@@ -1,12 +1,23 @@
 import React, { useState } from 'react'
 import {BsSendFill,BsCheck,BsCheck2All} from 'react-icons/bs'
 import {AiFillEye} from 'react-icons/ai'
+import StudioProductionForm from '../forms/StudioProductionForm';
 
 export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production,requested_by}) {
     const [fullImage, setImageFull] = useState(false);
     const [readMore, setReadMore] = useState(false);
+    const [clicked, setClicked] = useState(false);
+
   return (
-    <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}>
+    <>
+    {
+        clicked? 
+       
+        <StudioProductionForm isDarkTheme={isDarkTheme} />
+        :
+        <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}
+     onClick={()=>setClicked(true)}
+    >
        <div className='flex gap-3 items-center'>
         <div className='flex gap-3 items-center'>
                     <div>
@@ -68,6 +79,7 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
        </div>
        
       
-    </div>
+    </div>}
+    </>
   )
 }

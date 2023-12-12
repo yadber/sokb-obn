@@ -22,7 +22,7 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
   const [endTime, setEndTime] = useState(nowT)
   const [proposalForm, setProposalFrom] = useState({
     program_name : "",
-    host_name : allUserReletedData.user_name,
+    // host_name : allUserReletedData.user_name,
     host_number : "",
     guest_number : "",
     choose_studio : "",
@@ -42,92 +42,92 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
 
   async function onSaveClick(){
 
-    if(proposalForm.program_name && proposalForm.host_name && proposalForm.host_number && proposalForm.guest_number && proposalForm.choose_studio !== "Choose Studio"){
-      let formData = new FormData();
+  //   if(proposalForm.program_name && proposalForm.host_name && proposalForm.host_number && proposalForm.guest_number && proposalForm.choose_studio !== "Choose Studio"){
+  //     let formData = new FormData();
 
-      formData.append("file", selectedImage);
-      formData.append("program_name", proposalForm.program_name);
-      formData.append("host_name", proposalForm.host_name);
-      formData.append("host_number", proposalForm.host_number);
-      formData.append("guest_number", proposalForm.guest_number);
-      formData.append("studio_idfk", proposalForm.choose_studio);
-      formData.append("scheduled_date", startDate.toLocaleDateString());
-      formData.append("scheduled_s_time", startTime);
-      formData.append("scheduled_e_time", endTime);
-      formData.append("description", proposalForm.description);
-      formData.append("user_idfk", allUserReletedData.id)
+  //     formData.append("file", selectedImage);
+  //     formData.append("program_name", proposalForm.program_name);
+  //     formData.append("host_name", proposalForm.host_name);
+  //     formData.append("host_number", proposalForm.host_number);
+  //     formData.append("guest_number", proposalForm.guest_number);
+  //     formData.append("studio_idfk", proposalForm.choose_studio);
+  //     formData.append("scheduled_date", startDate.toLocaleDateString());
+  //     formData.append("scheduled_s_time", startTime);
+  //     formData.append("scheduled_e_time", endTime);
+  //     formData.append("description", proposalForm.description);
+  //     formData.append("user_idfk", allUserReletedData.id)
 
       
-      const result = await axios({
-        method: "post",
-        url: `${API_URL}/studioProduction/save`,
-        data: formData,
-        header: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      if (result.data === "saved") {
-        toast.success("saved successfully!",{
-          position:"top-center",
-          autoClose:2000,
-          theme : "colored"
-        })
+  //     const result = await axios({
+  //       method: "post",
+  //       url: `${API_URL}/studioProduction/save`,
+  //       data: formData,
+  //       header: {
+  //         Accept: "application/json",
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     if (result.data === "saved") {
+  //       toast.success("saved successfully!",{
+  //         position:"top-center",
+  //         autoClose:2000,
+  //         theme : "colored"
+  //       })
 
-        setPleaseUpdate(prevState => prevState + 1);
-        setShowModal(false)
-      }else{
-        toast.error("something went wrong!",{
-          position:"top-center",
-          autoClose:2000,
-          theme : "colored"
-        })
-      }
-    }else{
-      toast.error("all forms must be filled!",{
-        position:"top-center",
-        autoClose:2000,
-        theme : "colored"
-      })
+  //       setPleaseUpdate(prevState => prevState + 1);
+  //       setShowModal(false)
+  //     }else{
+  //       toast.error("something went wrong!",{
+  //         position:"top-center",
+  //         autoClose:2000,
+  //         theme : "colored"
+  //       })
+  //     }
+  //   }else{
+  //     toast.error("all forms must be filled!",{
+  //       position:"top-center",
+  //       autoClose:2000,
+  //       theme : "colored"
+  //     })
     }
    
-  }
+  // }
   async function checkAvailability(){
-    setPleaseUpdate(prevState => prevState + 1);
-    if(proposalForm.choose_studio === "Choose Studio"){
-      toast.warning("please choose the studio", {
-        position:"top-center",
-        autoClose:2000,
-        theme:"colored"
-      })
-    }else{
-      const data = {"choose_studio":proposalForm.choose_studio,
-      "start_date" : startDate.toLocaleDateString(), "start_time":startTime, "endTime":endTime};
-      await fetch(`${API_URL}/studioProduction/check`,{
-        method:'POST',
-        headers: {'Content-Type':'application/json'},
-        body : JSON.stringify(data)
-      }).then(response => response.json())
-      .then(data => {
-        if(data[0] && data[0].scheduled_e_time !== startTime){
-            setProgramAvailabale(false);
-            toast.info(`This time is occupied by ${data.map(val => val.program_name+" on Exactly "+ val.scheduled_date +" from " + val.scheduled_s_time + " to " + val.scheduled_e_time)}`, {
-              position:"top-center",
-              autoClose:5000,
-              theme:"colored"
-            })
-        }else{
-            setProgramAvailabale(true);
-            toast.success("The time is not occupied!", {
-              position: "top-center",
-              autoClose:2000,
-              theme:"colored"
-            })
-        }}
+  //   setPleaseUpdate(prevState => prevState + 1);
+  //   if(proposalForm.choose_studio === "Choose Studio"){
+  //     toast.warning("please choose the studio", {
+  //       position:"top-center",
+  //       autoClose:2000,
+  //       theme:"colored"
+  //     })
+  //   }else{
+  //     const data = {"choose_studio":proposalForm.choose_studio,
+  //     "start_date" : startDate.toLocaleDateString(), "start_time":startTime, "endTime":endTime};
+  //     await fetch(`${API_URL}/studioProduction/check`,{
+  //       method:'POST',
+  //       headers: {'Content-Type':'application/json'},
+  //       body : JSON.stringify(data)
+  //     }).then(response => response.json())
+  //     .then(data => {
+  //       if(data[0] && data[0].scheduled_e_time !== startTime){
+  //           setProgramAvailabale(false);
+  //           toast.info(`This time is occupied by ${data.map(val => val.program_name+" on Exactly "+ val.scheduled_date +" from " + val.scheduled_s_time + " to " + val.scheduled_e_time)}`, {
+  //             position:"top-center",
+  //             autoClose:5000,
+  //             theme:"colored"
+  //           })
+  //       }else{
+  //           setProgramAvailabale(true);
+  //           toast.success("The time is not occupied!", {
+  //             position: "top-center",
+  //             autoClose:2000,
+  //             theme:"colored"
+  //           })
+  //       }}
       
       
-      )
-    }
+  //     )
+  //   }
     
   }
 

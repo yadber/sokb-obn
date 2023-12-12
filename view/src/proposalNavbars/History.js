@@ -29,8 +29,6 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
     getStudioProposal()
     
   },[pleaseUpdate, couseEffect])
-   console.log("please update value" + pleaseUpdate);
-
   const HistoryObj = [
     {
       id : 1,
