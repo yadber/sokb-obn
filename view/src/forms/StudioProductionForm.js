@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 
 
-export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL, setShowModal, setPleaseUpdate  }) {
+export default function StudioProductionForm({ isDarkTheme,allUserReletedData,API_URL, setShowModal, setPleaseUpdate , program_name, setClicked,clicked,host_name,host_number, guest_number, description,  id, API_URLs }) {
   const nowTime = new Date();
   const [programAvailable, setProgramAvailabale] = useState(false);
   const hours = nowTime.getHours();
@@ -21,12 +21,12 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
   const [startTime, setStartTime] = useState(nowT)
   const [endTime, setEndTime] = useState(nowT)
   const [proposalForm, setProposalFrom] = useState({
-    program_name : "",
-    // host_name : allUserReletedData.user_name,
-    host_number : "",
-    guest_number : "",
+    program_name : program_name?program_name:"",
+    host_name : host_name?host_name:allUserReletedData.user_name,
+    host_number : host_number?host_number:"",
+    guest_number : guest_number?guest_number:"",
     choose_studio : "",
-    description : ""
+    description : description?description:""
 
   })
   const [selectedImage, setSelectedImage] = useState();
@@ -42,93 +42,124 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
 
   async function onSaveClick(){
 
-  //   if(proposalForm.program_name && proposalForm.host_name && proposalForm.host_number && proposalForm.guest_number && proposalForm.choose_studio !== "Choose Studio"){
-  //     let formData = new FormData();
+    if(proposalForm.program_name && proposalForm.host_name && proposalForm.host_number && proposalForm.guest_number && proposalForm.choose_studio !== "Choose Studio"){
+      let formData = new FormData();
 
-  //     formData.append("file", selectedImage);
-  //     formData.append("program_name", proposalForm.program_name);
-  //     formData.append("host_name", proposalForm.host_name);
-  //     formData.append("host_number", proposalForm.host_number);
-  //     formData.append("guest_number", proposalForm.guest_number);
-  //     formData.append("studio_idfk", proposalForm.choose_studio);
-  //     formData.append("scheduled_date", startDate.toLocaleDateString());
-  //     formData.append("scheduled_s_time", startTime);
-  //     formData.append("scheduled_e_time", endTime);
-  //     formData.append("description", proposalForm.description);
-  //     formData.append("user_idfk", allUserReletedData.id)
+      formData.append("file", selectedImage);
+      formData.append("program_name", proposalForm.program_name);
+      formData.append("host_name", proposalForm.host_name);
+      formData.append("host_number", proposalForm.host_number);
+      formData.append("guest_number", proposalForm.guest_number);
+      formData.append("studio_idfk", proposalForm.choose_studio);
+      formData.append("scheduled_date", startDate.toLocaleDateString());
+      formData.append("scheduled_s_time", startTime);
+      formData.append("scheduled_e_time", endTime);
+      formData.append("description", proposalForm.description);
+      formData.append("user_idfk", allUserReletedData.id)
 
       
-  //     const result = await axios({
-  //       method: "post",
-  //       url: `${API_URL}/studioProduction/save`,
-  //       data: formData,
-  //       header: {
-  //         Accept: "application/json",
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     if (result.data === "saved") {
-  //       toast.success("saved successfully!",{
-  //         position:"top-center",
-  //         autoClose:2000,
-  //         theme : "colored"
-  //       })
+      const result = await axios({
+        method: "post",
+        url: `${API_URL}/studioProduction/save`,
+        data: formData,
+        header: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (result.data === "saved") {
+        toast.success("saved successfully!",{
+          position:"top-center",
+          autoClose:2000,
+          theme : "colored"
+        })
 
-  //       setPleaseUpdate(prevState => prevState + 1);
-  //       setShowModal(false)
-  //     }else{
-  //       toast.error("something went wrong!",{
-  //         position:"top-center",
-  //         autoClose:2000,
-  //         theme : "colored"
-  //       })
-  //     }
-  //   }else{
-  //     toast.error("all forms must be filled!",{
-  //       position:"top-center",
-  //       autoClose:2000,
-  //       theme : "colored"
-  //     })
+        setPleaseUpdate(prevState => prevState + 1);
+        setShowModal(false)
+      }else{
+        toast.error("something went wrong!",{
+          position:"top-center",
+          autoClose:2000,
+          theme : "colored"
+        })
+      }
+    }else{
+      toast.error("all forms must be filled!",{
+        position:"top-center",
+        autoClose:2000,
+        theme : "colored"
+      })
     }
    
-  // }
+  }
   async function checkAvailability(){
-  //   setPleaseUpdate(prevState => prevState + 1);
-  //   if(proposalForm.choose_studio === "Choose Studio"){
-  //     toast.warning("please choose the studio", {
-  //       position:"top-center",
-  //       autoClose:2000,
-  //       theme:"colored"
-  //     })
-  //   }else{
-  //     const data = {"choose_studio":proposalForm.choose_studio,
-  //     "start_date" : startDate.toLocaleDateString(), "start_time":startTime, "endTime":endTime};
-  //     await fetch(`${API_URL}/studioProduction/check`,{
-  //       method:'POST',
-  //       headers: {'Content-Type':'application/json'},
-  //       body : JSON.stringify(data)
-  //     }).then(response => response.json())
-  //     .then(data => {
-  //       if(data[0] && data[0].scheduled_e_time !== startTime){
-  //           setProgramAvailabale(false);
-  //           toast.info(`This time is occupied by ${data.map(val => val.program_name+" on Exactly "+ val.scheduled_date +" from " + val.scheduled_s_time + " to " + val.scheduled_e_time)}`, {
-  //             position:"top-center",
-  //             autoClose:5000,
-  //             theme:"colored"
-  //           })
-  //       }else{
-  //           setProgramAvailabale(true);
-  //           toast.success("The time is not occupied!", {
-  //             position: "top-center",
-  //             autoClose:2000,
-  //             theme:"colored"
-  //           })
-  //       }}
+    setPleaseUpdate(prevState => prevState + 1);
+    if(proposalForm.choose_studio === "Choose Studio"){
+      toast.warning("please choose the studio", {
+        position:"top-center",
+        autoClose:2000,
+        theme:"colored"
+      })
+    }else{
+      const data = {"choose_studio":proposalForm.choose_studio,
+      "start_date" : startDate.toLocaleDateString(), "start_time":startTime, "endTime":endTime};
+      await fetch(`${API_URL}/studioProduction/check`,{
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body : JSON.stringify(data)
+      }).then(response => response.json())
+      .then(data => {
+        if(data[0] && data[0].scheduled_e_time !== startTime){
+            setProgramAvailabale(false);
+            toast.info(`This time is occupied by ${data.map(val => val.program_name+" on Exactly "+ val.scheduled_date +" from " + val.scheduled_s_time + " to " + val.scheduled_e_time)}`, {
+              position:"top-center",
+              autoClose:5000,
+              theme:"colored"
+            })
+        }else{
+            setProgramAvailabale(true);
+            toast.success("The time is not occupied!", {
+              position: "top-center",
+              autoClose:2000,
+              theme:"colored"
+            })
+        }}
       
       
-  //     )
-  //   }
+      )
+    }
     
+  }
+
+ async function onUpdateClicked(){
+ 
+    
+    const data = {
+      "program_name" : proposalForm.program_name,
+      "host_name" : proposalForm.host_name,
+      "host_number" : proposalForm.host_number,
+      "guest_number" : proposalForm.guest_number,
+      "description" : proposalForm.description
+    } 
+    await fetch(`${API_URLs}/studioProduction/update/${id}`,{
+      method : "PUT",
+      headers : {
+        'Content-type' : "application/json"
+      },
+      body : JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+      if(data === "updated"){
+        toast.success("Successfully Updated!",{
+          position:"top-center",
+          autoClose : 2000,
+          theme:"colored"
+        })
+        setClicked(false)
+      }
+    })
+
+
   }
 
   function onFormChange(e){
@@ -222,18 +253,22 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
             onLoginFormChangeHandler={onFormChange}
           />
           </div>
+         { clicked ? "":
           <Dropdown 
           allList={StudioDropdown} 
           label={"Choose Studio"}
           onDropDownChange = {onFormChange} 
           name = "choose_studio"
           isDarkTheme={isDarkTheme}/>
-
+}
          
         </fieldset>
       </div>
       <div className="flex gap-2 mb-2">
-      <fieldset
+
+      {
+        clicked?"":
+        <fieldset
           className={`border-2 w-full  p-4 gap-5 flex flex-col ${
             isDarkTheme ? " border-gray-400" : "border-gray-700"
           } `}
@@ -265,7 +300,7 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
           <div  className="flex justify-end italic underline text-blue-400  mt-[-1rem]">
               <p className="cursor-pointer  hover:text-blue-600" onClick={()=>checkAvailability()} >check availability</p>
           </div>
-        </fieldset>
+        </fieldset>}
         </div>
             <Textarea
             name = "description"
@@ -274,6 +309,8 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
             label={"Description (optional)"} 
             placeholder={"Write your description here..."} 
             isDarkTheme={isDarkTheme}/>
+           { clicked ?  "" : 
+           <>
             <label className="mb-1 text-sm font-semibold">Attach file( Optional, file type:- image)</label>
             <Image 
                  selectedImage={selectedImage}
@@ -282,10 +319,26 @@ export default function StudioProductionForm({ isDarkTheme,allUserReletedData,AP
                  fullImage = "yes"
             
             />
-            <div onClick={()=>onSaveClick()} 
-            className="border-2 mt-2 mb-2 text-white bg-blue-800 rounded-lg text-center p-1 max-w-[8rem] min-w-[8rem] flex justify-center items-end float-right hover:bg-blue-500 cursor-pointer ">
-              <button >Save</button>
-            </div>
+            </>}
+            {
+              clicked?
+              <div>
+                <button className="border-2 mt-2 mb-2 text-white bg-blue-800 rounded-lg text-center p-1 max-w-[8rem] min-w-[8rem] flex justify-center items-end float-right hover:bg-blue-500 cursor-pointer "
+                onClick={()=>onUpdateClicked()}
+                >Update</button>
+                <button className="border-2 mt-2 mb-2 mr-2 text-white bg-red-800 rounded-lg text-center p-1 max-w-[12rem] min-w-[8rem] flex justify-center items-end float-right hover:bg-red-500 cursor-pointer "
+                onClick={()=>setClicked(false)}
+                >cancel edit mode</button>
+  
+              </div>:
+
+              <div onClick={()=>onSaveClick()} 
+              className="border-2 mt-2 mb-2 text-white bg-blue-800 rounded-lg text-center p-1 max-w-[8rem] min-w-[8rem] flex justify-center items-end float-right hover:bg-blue-500 cursor-pointer ">
+                <button >Save</button>
+  
+              </div>
+            }
+           
         
     </div>
   );

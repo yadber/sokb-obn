@@ -83,5 +83,37 @@ studioProduction.post('/check', (req,res,next) =>{
 
 })
 
+studioProduction.delete('/delete/:id', (req,res,next) =>{
+    const val = req.params.id;
+
+    const sql = "DELETE FROM saved_studio_production_form where id = ?";
+    dbConn.query(sql,[val], function(error,data){
+        if(error) throw error;
+        else{
+            return res.json("DELETED")
+        }
+    })
+    
+})
+
+studioProduction.put('/update/:id', (req,res,next) => {
+    const val = req.params.id;
+    const program_name = req.body.program_name;
+    const host_name = req.body.host_name;
+    const host_number = req.body.host_number;
+    const guest_number = req.body.guest_number;
+    const description = req.body.description;
+    const date = new Date();
+
+    const sql = "UPDATE saved_studio_production_form  SET program_name = ?, host_name = ?, host_number = ?, guest_number = ?, description = ?, update_date = ? WHERE id = ?"
+
+    dbConn.query(sql, [program_name,host_name,host_number,guest_number, description, date, val], function(error,data){
+        if(error) throw error;
+        else{
+            return res.json("updated");
+        }
+    })
+})
+
 
 module.exports = studioProduction;

@@ -20,7 +20,7 @@ export default function Sidebar({ isDarkTheme,setShowSidebar,setMenu, menu }) {
         
       <div
         className={`h-full px-3 py-4 overflow-y-auto  ${
-          isDarkTheme ? "bg-gray-700" : "bg-white "
+          isDarkTheme ? "bg-black" : "bg-white "
         }`}
       >
         <div className="flex justify-between items-center mb-4">

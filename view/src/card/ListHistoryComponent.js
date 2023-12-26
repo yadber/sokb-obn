@@ -2,21 +2,34 @@ import React, { useState } from 'react'
 import {BsSendFill,BsCheck,BsCheck2All} from 'react-icons/bs'
 import {AiFillEye} from 'react-icons/ai'
 import StudioProductionForm from '../forms/StudioProductionForm';
-
-export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production,requested_by}) {
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_date, body,place, program,news, days,from,to,production,requested_by,id,DeleteFromHistory, API_URL}) {
     const [fullImage, setImageFull] = useState(false);
     const [readMore, setReadMore] = useState(false);
     const [clicked, setClicked] = useState(false);
+
+    
 
   return (
     <>
     {
         clicked? 
        
-        <StudioProductionForm isDarkTheme={isDarkTheme} />
+        <StudioProductionForm isDarkTheme={isDarkTheme}
+            setClicked = {setClicked}
+            API_URLs = {API_URL}
+            clicked = {clicked}
+            program_name = {title}
+            host_name = {requested_by}
+            guest_number = {program}
+            host_number = {news}
+            description = {body}  
+            id = {id}           
+        />
         :
         <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}
-     onClick={()=>setClicked(true)}
+    
     >
        <div className='flex gap-3 items-center'>
         <div className='flex gap-3 items-center'>
@@ -36,7 +49,7 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
                             {
                                 production?
                                 <p className={` ${readMore?"":"line-clamp-2"}`}>
-                                    {` ${requested_by} is requesting a program called ${title} studio production on ${place} studio with ${news}-host and ${program}-guest on ${days} from ${from} to ${to} ${body?body:"no Description"}`}
+                                    {` ${requested_by} is requesting a program called ${title} studio production on ${place} studio with ${news}-host and ${program}-guest on ${days} from ${from} to ${to} \n ${body?body:"no Description"}`}
                                 </p>
                                 :
                                 <p className={`${readMore?"":"line-clamp-2"}`}> 
@@ -73,8 +86,13 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
                         </div>
                     </div>
             </div>
-            <div>
-               <BsSendFill className='w-10 h-10 text-blue-500 border-2 p-2 border-blue-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>
+            <div className='gap-1 flex flex-col'>
+               <BsSendFill className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>
+               <CiEdit  className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'
+               
+               onClick={()=>setClicked(true)}
+               />
+               <MdDelete onClick={()=>DeleteFromHistory(id)} className='w-10 h-10 text-red-500 border-2 p-2 border-red-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>
             </div>
        </div>
        

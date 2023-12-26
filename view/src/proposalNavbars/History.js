@@ -5,10 +5,12 @@ import HistoryAddModal from '../card/HistoryAddModal'
 
 import {BiSolidMessageAdd} from 'react-icons/bi'
 import {BsTable,BsListTask} from 'react-icons/bs'
+import { ToastContainer,  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import HistoryGrid from '../card/HistoryGrid'
 
-export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
+export default function History({isDarkTheme, API_URL, allUserReletedData, } ) {
   const [listView, setListView] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [allSavedStudioProposal, setAllSavedStudioProposal] = useState([{}]);
@@ -29,6 +31,20 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
     getStudioProposal()
     
   },[pleaseUpdate, couseEffect])
+
+  async function DeleteFromHistory(id){
+    await fetch(API_URL+'/studioProduction/delete/'+id, {method:'DELETE'})
+    .then(
+      
+      toast.success("Deleted Successfully!", {
+        position: "top-center",
+        autoClose:2000,
+        theme:"colored"
+      })
+      )
+      setPleaseUpdate(prevState => prevState+1)
+    
+}
   const HistoryObj = [
     {
       id : 1,
@@ -77,7 +93,7 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
     { showModal? <HistoryAddModal setPleaseUpdate={setPleaseUpdate} isDarkTheme={isDarkTheme} setShowModal={setShowModal} API_URL={API_URL} allUserReletedData={allUserReletedData}/> :
       <>
       <div className="flex gap-10 w-full">
-        
+      <ToastContainer />
         <BiSolidMessageAdd className='text-2xl cursor-pointer' onClick={()=>setShowModal(true)}/>
 
       {  listView? 
@@ -122,9 +138,10 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
               days = {val.days}
               from = {val.from}
               to = {val.to}
-
+              API_URL = {API_URL}
               production = {val.production}
-              isDarkTheme={isDarkTheme}/> 
+              isDarkTheme={isDarkTheme}
+              /> 
             })
             
           }
@@ -134,10 +151,12 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
           {
             allSavedStudioProposal.map(val => {
               return <ListHistoryComponent 
-              imgSrc={`${API_URL}/studioProduction/${val.file}`} 
+              imgSrc={val.file !== "No file attached!" ? `${API_URL}/studioProduction/${val.file}` : `${API_URL}/thumbnail/studio.jpg`} 
               saved_date={val.saved_date}
               title = {val.program_name}
               body = {val.description}
+              id = {val.id}
+              DeleteFromHistory = {DeleteFromHistory}
               place = {val.studio_idfk}
               program={val.guest_number}
               news = {val.host_number}
@@ -145,9 +164,11 @@ export default function History({isDarkTheme, API_URL, allUserReletedData} ) {
               from = {val.scheduled_s_time}
               to = {val.scheduled_e_time}
               requested_by = {val.host_name}
+              API_URL = {API_URL}
               production = {val.production_type}
               studio = "yes"
-              isDarkTheme={isDarkTheme}/>
+              isDarkTheme={isDarkTheme}
+              />
             })
             
           }
