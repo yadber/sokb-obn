@@ -9,8 +9,10 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
     const [readMore, setReadMore] = useState(false);
     const [clicked, setClicked] = useState(false);
 
+    const bool =  days;
+    const today = new Date().toLocaleDateString();
+    const someValue = bool < today;
     
-
   return (
     <>
     {
@@ -28,7 +30,7 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
             id = {id}           
         />
         :
-        <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}`}
+        <div className={` w-full p-6  rounded-lg shadow cursor-pointer  max-w-6xl ${production? isDarkTheme? "bg-gray-800 border-gray-700":"bg-gray-300 border border-gray-200":""} ${isDarkTheme?"bg-gray-800 border-gray-700":"bg-white border border-gray-200 "}   ${someValue?"bg-yellow-900":""}`}
     
     >
        <div className='flex gap-3 items-center'>
@@ -72,8 +74,12 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
                             <p>{program>0?program>1?program+"-Guests":program+"-Guest":'0-Gust'}</p>
                             <p>{news>0?news>1?news+"-Hosts":program+"-Host":'0-Host'}</p>
                             <p>{days}</p> 
-                            <p>{from?from:"from"} - {to?to:"to"}</p></>}
+                            <p>{from?from:"from"} - {to?to:"to"}</p>
+                             
+                            </>}
+
                             </div>
+
                             {/* <div className='flex gap-1 items-center '>
                                 <AiFillEye className='text-2xl hover:text-blue-400'/>
                                 <p className='font-bold '>22</p>
@@ -87,11 +93,11 @@ export default function ListHistoryComponent({isDarkTheme, imgSrc,title, saved_d
                     </div>
             </div>
             <div className='gap-1 flex flex-col'>
-               <BsSendFill className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>
-               <CiEdit  className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'
+               {!someValue &&<BsSendFill className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>}
+               {!someValue && <CiEdit  className='w-10 h-10 text-blue-500 border-2 p-2 border-gray-400 cursor-pointer hover:bg-gray-200 rounded-xl'
                
                onClick={()=>setClicked(true)}
-               />
+               />}
                <MdDelete onClick={()=>DeleteFromHistory(id)} className='w-10 h-10 text-red-500 border-2 p-2 border-red-400 cursor-pointer hover:bg-gray-200 rounded-xl'/>
             </div>
        </div>

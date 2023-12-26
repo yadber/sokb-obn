@@ -175,8 +175,9 @@ export default function History({isDarkTheme, API_URL, allUserReletedData, } ) {
           </div>}
         </div>
           :
-        <div className='w-full max-w-6xl '>
-          <HistoryGrid HistoryObj={HistoryObj} isDarkTheme={isDarkTheme}/>
+        <div className='w-full max-w-6xl'>
+          { (fieldOrStudio === "field" || fieldOrStudio === "both") &&<HistoryGrid HistoryObj={HistoryObj} isDarkTheme={isDarkTheme}/>}
+          {( fieldOrStudio === "studio"  || fieldOrStudio==="both") &&<HistoryGrid HistoryObj={allSavedStudioProposal} isDarkTheme={isDarkTheme} studio="true"/>}
         </div>
         }
        
